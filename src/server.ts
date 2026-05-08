@@ -12,6 +12,8 @@ const adapter = new PrismaPg({
 
 const prisma = new PrismaClient({ adapter });
 
+app.use(express.json());
+
 app.get('/movies', async (_, res) => {
     const movies = await prisma.movie.findMany({
         orderBy: {
@@ -20,9 +22,30 @@ app.get('/movies', async (_, res) => {
         include: {
             genres: true,
             languages: true,
-        }
+        },
     });
     res.json(movies);
+});
+
+app.post('/movies', async (req, res) => {
+    const { title, release_date, genre_id, language_id, oscar_count } =
+        req.body;
+
+    try {
+        await prisma.movie.create({
+            data: {
+                title,
+                release_date: new Date(release_date),
+                genre_id,
+                language_id,
+                oscar_count,
+            },
+        });
+
+        res.status(201).send('Movie created');
+    } catch (error) {
+        return res.status(500).send('Erro ao criar filme');
+    }
 });
 
 app.listen(port, () => {
