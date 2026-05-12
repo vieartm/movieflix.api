@@ -19,7 +19,7 @@ const swaggerDocument = {
     paths: {
         '/movies': {
             get: {
-                "tags": ["Movie"],
+                tags: ['Movie'],
                 summary: 'Obter todos os filmes',
                 responses: {
                     '200': {
@@ -34,6 +34,70 @@ const swaggerDocument = {
                                 },
                             },
                         },
+                    },
+                },
+            },
+        },
+        '/movies/{id}': {
+            put: {
+                tags: ['Movie'],
+                summary: 'Atualizar um filme',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        description: 'ID do filme a ser atualizado',
+                        schema: {
+                            type: 'integer',
+                        },
+                    },
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                $ref: '#/components/schemas/MovieInput',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    '200': {
+                        description: 'Filme atualizado com sucesso',
+                    },
+                    '404': {
+                        description: 'Filme não encontrado',
+                    },
+                    '500': {
+                        description: 'Falha ao atualizar o filme',
+                    },
+                },
+            },
+            delete: {
+                tags: ['Movie'],
+                summary: 'Remover um filme',
+                parameters: [
+                    {
+                        name: 'id',
+                        in: 'path',
+                        required: true,
+                        description: 'ID do filme a ser removido',
+                        schema: {
+                            type: 'integer',
+                        },
+                    },
+                ],
+                responses: {
+                    '200': {
+                        description: 'Filme removido com sucesso',
+                    },
+                    '404': {
+                        description: 'Filme não encontrado',
+                    },
+                    '500': {
+                        description: 'Falha ao remover o filme',
                     },
                 },
             },
@@ -85,6 +149,39 @@ const swaggerDocument = {
                                 description: 'Nome do idioma',
                             },
                         },
+                    },
+                    oscar_count: {
+                        type: 'integer',
+                        description: 'Número de Oscars ganhos pelo filme',
+                    },
+                    release_date: {
+                        type: 'string',
+                        format: 'date',
+                        description: 'Data de lançamento do filme',
+                    },
+                },
+            },
+            MovieInput: {
+                type: 'object',
+                required: [
+                    'title',
+                    'genre_id',
+                    'language_id',
+                    'oscar_count',
+                    'release_date',
+                ],
+                properties: {
+                    title: {
+                        type: 'string',
+                        description: 'Título do filme',
+                    },
+                    genre_id: {
+                        type: 'integer',
+                        description: 'ID do gênero',
+                    },
+                    language_id: {
+                        type: 'integer',
+                        description: 'ID do idioma',
                     },
                     oscar_count: {
                         type: 'integer',
